@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: lightpink;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            width: 500px;
+            height: 500px;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+           display: flex;
+           flex-wrap: wrap;
+           justify-content: space-around;
+        }
+
+        .main img {
+            width: 120px;
+            height: 120px;
+            transition: all 0.3s;
+            border-radius: 8px;
+            opacity: 0.85;
+        }
+        .main img:hover{
+            opacity: 1;
+        }
+        .main img:active{
+            transform: scale(0.8) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main"></div>
+
+    <script>
+        function Game() {
+            this.main = main
+        }
+
+        Game.prototype.RanImg = function () {
+            var index = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+            var newindex = []
+            for (let i = 0; i < 16; i++) {
+                var ran = Math.floor(Math.random() * index.length)
+                newindex.push(index[ran])
+                index.splice(ran, 1)
+            }
+            for (let i = 0; i < 16; i++) {
+                var img = document.createElement("img")
+                img.setAttribute("src", "img/" + newindex[i] + ".png")
+                main.appendChild(img)
+            }
+        }
+
+        Game.prototype.init = function () {
+            var arr = []
+            for (var i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    arr.push([i, j])
+                }
+            }
+            for (let i = 0; i < 16; i++) {
+                imgs[i].setAttribute("address", arr[i])
+                emImg = imgs[i].getAttribute("src")
+                if (emImg == "img/16.png") {
+                    imgs[i].setAttribute("class", "empty")
+                }
+            }
+            game.Changepic()
+        }
+        Game.prototype.move = function () {
+            var url1 = event.target.getAttribute("src")
+            var urlE = empty.getAttribute("src")
+            event.target.setAttribute("src", urlE)
+            event.target.setAttribute("class", "empty")
+            empty.setAttribute("src", url1)
+            empty.setAttribute("class", "")
+            empty.style.transform = "scale(0.4)"
+            setTimeout(function(){
+                empty.style.transform = "scale(1)"
+            },100)
+        }
+        Game.prototype.Changepic = function () {
+
+            this.main.onclick = function (event) {
+                empty = document.querySelector(".empty")
+                x = Number(event.target.getAttribute("address").slice(0, 1))
+                y = Number(event.target.getAttribute("address").slice(2, 3))
+                ex = Number(empty.getAttribute("address").slice(0, 1))
+                ey = Number(empty.getAttribute("address").slice(2, 3))
+                if (x == ex) {
+                    if (y + 1 == ey || y - 1 == ey) {
+                        game.move()
+                    }
+                }
+                else if (y == ey) {
+                    if (x + 1 == ex || x - 1 == ex) {
+                        game.move()
+                    }
+                }
+                game.Check()
+            }
+        }
+        Game.prototype.Check = function () {
+            var imgarr = []
+            var succeed = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16"
+            var getimgindex
+            for (let i = 0; i < imgs.length; i++) {
+                getimgindex = (imgs[i].getAttribute("src").slice(4))
+                getimgindex = getimgindex.slice(0, -4)
+                imgarr.push(Number(getimgindex))
+            }
+            if (imgarr.toString() == succeed) {
+                setTimeout(function(){
+                    alert("OK!")
+                },500)
+            }
+        }
+        var main = document.querySelector(".main")
+        var game = new Game();
+        game.RanImg()
+        var imgs = document.querySelectorAll(".main img")
+        game.init()
+    </script>
+</body>
+
+</html>
